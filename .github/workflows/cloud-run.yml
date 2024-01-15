@@ -1,4 +1,4 @@
-name: hello-go
+name: Build And Deploy To Clound Run
 
 on:
   push:
