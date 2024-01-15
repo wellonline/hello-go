@@ -19,7 +19,7 @@ FROM alpine:3.9
 COPY --from=build_base /tmp/hello-go/out/hello-go /app/hello-go
 
 # This container exposes port 8080 to the outside world
-EXPOSE 80
+EXPOSE 8080
 
 # Run the binary program produced by `go install`
 CMD ["/app/hello-go"]
