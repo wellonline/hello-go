@@ -30,11 +30,17 @@ func main() {
 func run(ctx context.Context, log *slog.Logger) error {
 	log.Info("startup", "GOMAXPROCS", runtime.GOMAXPROCS(0))
 
+	cfg := struct {
+		BuildVersion string
+	}{
+		build,
+	}
+
 	shutdown := make(chan os.Signal, 1)
 	signal.Notify(shutdown, syscall.SIGINT, syscall.SIGTERM)
 
 	app := web.NewApp()
-	health.Routes(app)
+	health.Routes(app, health.Config{cfg.BuildVersion})
 	api := http.Server{
 		Addr:              ":8080",
 		ReadHeaderTimeout: 5 * time.Second,
