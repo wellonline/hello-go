@@ -1,0 +1,51 @@
+---
+repos:
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v4.5.0
+  hooks:
+  - id: trailing-whitespace
+  - id: end-of-file-fixer
+  - id: check-yaml
+  - id: check-added-large-files
+
+- repo: https://github.com/jumanjihouse/pre-commit-hook-yamlfmt
+  rev: 0.2.3
+  hooks:
+  - id: yamlfmt
+    args: [--mapping, '2', --sequence, '2', --offset, '0', --colons, --width, '150']
+
+- repo: https://github.com/dnephin/pre-commit-golang
+  rev: v0.5.1
+  hooks:
+  - id: go-build
+  - id: go-mod-tidy
+  - id: go-unit-tests
+  - id: golangci-lint
+  - id: validate-toml
+
+- repo: local
+  hooks:
+  - id: go-sort-imports
+    name: go sort imports
+    language: system
+    entry: goimports -w -local github.com .
+    pass_filenames: false
+    files: .*\.go
+  - id: go-sec
+    name: go security check
+    language: system
+    entry: gosec -severity low ./...
+    pass_filenames: false
+    files: .*\.go
+  - id: dependency-check
+    name: OWASP Dependency Check
+    language: system
+    entry: dependency-check --out . --scan . --enableExperimental --failOnCVSS 0 --suppression dependency-suppressions.xml
+    pass_filenames: false
+    files: .*\.mod$
+
+- repo: https://github.com/milin/giticket
+  rev: v1.4
+  hooks:
+  - id: giticket
+    args: ['--regex=[A-Z0-9]+-[0-9]+', '--format=[{ticket}] {commit_msg}', --mode=regex_match]
