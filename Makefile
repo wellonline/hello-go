@@ -3,3 +3,11 @@ run:
 
 test:
 	go test -coverprofile coverage.out -v ./...
+
+## Dependencies
+
+deps-upgrade:
+	go get -u -v ./...
+	go mod tidy
+	go mod vendor
+
