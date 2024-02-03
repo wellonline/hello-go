@@ -1,0 +1,15 @@
+FROM golang:1.21.5 as builder
+ENV CGP_ENABLED 0
+ARG BUILD_REF
+
+# Copy the source code into the container.
+COPY . /service
+
+# Build the service binary.
+WORKDIR /service/app/services/hello-go
+RUN go build -ldflags "-X main.build=${BUILD_REF}"
+
+FROM scratch
+COPY --from=builder /service/app/services/hello-go/hello-go /service/hello-go
+WORKDIR /service
+CMD ["./hello-go"]
